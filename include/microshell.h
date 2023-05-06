@@ -7,14 +7,8 @@
 #include "string.h"
 #include <sys/wait.h>
 
-typedef struct s_list t_list;
-
-typedef struct s_list
-{
-	char *string;
-	t_list *next;
-
-} t_list;
+#include "../include/parsing.h"
+#include "../include/exec.h"
 
 
 int exec(int argc, char **argv, char **env);
