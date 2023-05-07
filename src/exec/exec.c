@@ -4,34 +4,76 @@
 // built-in = function doesnt use execve
 
 //alloc enough space for arg of cd and pass it
-char* const* convert_to_const_char_pointer(char* str)
+
+char *ft_strcpy(char *dest, const char *src) 
 {
-    char* const* const_ptr;
-	const ptr = (char* const*)malloc(sizeof(char*));
-	strcpy(ptr, str);
-    return const_ptr;
+    if (!src || !dest)
+        return (NULL);
+	int i;
+
+	i = 0;
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = 0;
+    return (dest);
+}
+
+
+char **execve_arg_convert(char* str)
+{
+	char **execve_arg;
+	int size;
+
+	execve_arg = calloc(2, sizeof(char *));
+	if(!execve_arg)
+		return(NULL);
+	size = ft_strlen(str);
+	execve_arg[0] = malloc((size + 1) * sizeof(char));
+	//execve_arg[0][0] = ' ';
+	execve_arg[0] = ft_strcpy(execve_arg[0], str);
+	execve_arg[0][size] = '\0';
+	execve_arg[1] = NULL;
+	
+    return (execve_arg);
 }
 
 
 int exec(t_list **list, int argc, char **argv, char **env)
 {	
 	t_list *current;
-	char* const* arg_const;
+	char **execve_arg;
+
 	int pid;
 
 	current = *list;
 	if(!*list)
 		return(1);
+
 	while (current != NULL)
 	{
-		if(current->string != NULL && current->next != NULL && strcmp(current->string, "cd") == 0)
+		if(strcmp(current->string, "cd") == 0)
 		{
-			pid = fork();
-			if(pid == 0)
+			//pid = fork();
+			//execve("/bin/echo", argv, env);
+			if ((current != NULL && current->next == NULL)
+				|| (current != NULL && current->next != NULL && current->next->next != NULL))
 			{
-				arg_const = convert_to_const_char_pointer(current->next->string);
-				execve("/usr/bin/echo", arg_const, env);
+				write(2, "error: cd: bad arguments\n", ft_strlen("error: cd: bad arguments\n"));
 				return(1);
+			}
+			if(current != NULL && current->next != NULL);
+			{
+				if (chdir(current->next->string) == -1)
+				{
+					write(2, "error: cd: cannot change directory to ", ft_strlen("error: cd: cannot change directory to "));
+					write(2, current->next->string, ft_strlen(current->next->string));
+					write(2, "\n", 1);
+					return(1);
+				}
+				system("ls");
 			}
 		}
 		current = current->next;

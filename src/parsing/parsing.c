@@ -13,7 +13,7 @@ int ft_strlen(char *str)
 }
 
 
-void copy_str(t_list *node, char *str)
+void copy_str_node(t_list *node, char *str)
 {
 	int i;
 
@@ -35,7 +35,7 @@ int allocate_strspace(t_list *node, char *str)
     node->string = malloc(sizeof(char) * str_size + 1);
     if (!node->string)
         return (1);
-    copy_str(node, str);
+    copy_str_node(node, str);
     return (0);
 }
 
@@ -82,7 +82,7 @@ int start_parse(t_list **list, int argc, char **argv)
 	t_list *current;
 
 	new_node = NULL;
-    int i = 1;
+    int i = 0;
     while (i < argc)
     {
 		new_node = alloc_node(argv[i]);
