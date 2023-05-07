@@ -11,7 +11,5 @@
 #include "../include/exec.h"
 
 
-int exec(int argc, char **argv, char **env);
-int start_parse(int argc, char **argv);
 
 #endif

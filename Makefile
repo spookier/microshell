@@ -1,7 +1,8 @@
 # Variables
 NAME = microshell
 CC = cc
-# CFLAGS = -Wall -Wextra -Werror
+#CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -g3
 
 EXEC_DIR = ./src/exec/
 PARSING_DIR = ./src/parsing/

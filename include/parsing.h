@@ -10,4 +10,7 @@ typedef struct s_list
 
 } t_list;
 
+
+int start_parse(t_list **list, int argc, char **argv);
+
 #endif

@@ -1,5 +1,6 @@
 #include "microshell.h"
 
+
 int ft_strlen(char *str)
 {
 	int i;
@@ -10,6 +11,7 @@ int ft_strlen(char *str)
 	return(i);
 	
 }
+
 
 void copy_str(t_list *node, char *str)
 {
@@ -24,19 +26,21 @@ void copy_str(t_list *node, char *str)
 }
 
 
-void *allocate_strspace(t_list *node, char *str)
+
+int allocate_strspace(t_list *node, char *str)
 {
-	int str_size;
-	
-	str_size = ft_strlen(str);
-	node->string = malloc(sizeof(char) * str_size + 1);
-	if(!node->string)
-		return(NULL);
-	copy_str(node, str);
+    int str_size;
+
+    str_size = ft_strlen(str);
+    node->string = malloc(sizeof(char) * str_size + 1);
+    if (!node->string)
+        return (1);
+    copy_str(node, str);
+    return (0);
 }
 
 
-t_list *add_node(char *str)
+t_list *alloc_node(char *str)
 {
 	t_list *node;
 
@@ -47,58 +51,57 @@ t_list *add_node(char *str)
 	if(!node)
 		return(NULL);
 	
-	if(!allocate_strspace(node, str))
+	if(allocate_strspace(node, str) == 1)
 	{
 		free(node);
 		return(NULL);
 	}
 
 	node->next = NULL;
+	return(node);
 }
 
 
-t_list *add_node_to_list(t_list **head, char *str)
+void print_list(t_list *node)
 {
-    t_list *new_node;
-    t_list *current;
+	t_list *tmp;
 
-
-	new_node = add_node(str);
-    if (!new_node)
-        return NULL;
-
-    if (!(*head))
-    {
-        *head = new_node;
-    }
-    else
-    {
-        current = *head;
-        while (current->next)
-        {
-            current = current->next;
-        }
-        current->next = new_node;
-    }
-    
-    return new_node;
+	tmp = node;
+	while (tmp != NULL)
+	{
+		printf("%s ", tmp->string);
+		tmp = tmp->next;
+	}
+	printf("\n");
 }
 
 
-int start_parse(int argc, char **argv)
+int start_parse(t_list **list, int argc, char **argv)
 {
-    t_list *head;
-    int i = 0;
+	t_list *new_node;
+	t_list *current;
 
-    head = NULL;
-
+	new_node = NULL;
+    int i = 1;
     while (i < argc)
     {
-        add_node_to_list(&head, argv[i]);
-	    //free list and quit if error
-
+		new_node = alloc_node(argv[i]);
+		if(!new_node)
+		{
+			//free list then quit
+			return(1);
+		}
+		if(*list == NULL)
+			*list = new_node;
+		else
+		{
+			current = *list;
+			while (current->next != NULL)
+				current = current->next;
+			current->next = new_node;
+		}
         i++;
     }
-
-
+	//print_list(*list);
+	return(0);
 }
